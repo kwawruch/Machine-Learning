@@ -21,7 +21,7 @@ test_datagen = ImageDataGenerator(
     rescale=1/255
 )
 img_size = 64
-batch_size = 4
+batch_size = 30
 
 
 train_generator = train_datagen.flow_from_directory(
@@ -53,8 +53,10 @@ x,y = test_generator.next()
 model = Sequential()
 model.add(Conv2D(32, 3, activation="relu", input_shape=(img_size, img_size, 3)))
 model.add(MaxPool2D(2, 2))
+model.add(Dropout(0.6))
 model.add(Conv2D(32, 3, activation="relu"))
 model.add(MaxPool2D(2, 2))
+model.add(Dropout(0.4))
 model.add(Conv2D(64, 3, activation="relu"))
 model.add(MaxPool2D(2, 2))
 model.add(Dropout(0.4))
@@ -68,7 +70,7 @@ model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accur
 history = model.fit(
     train_generator,
     steps_per_epoch=train_generator.samples // batch_size,
-    epochs=50,
+    epochs=20,
     validation_data=test_generator,
     validation_steps=test_generator.samples // batch_size
 )
