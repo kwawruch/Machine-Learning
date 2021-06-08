@@ -5,8 +5,6 @@ from keras import models
 import tensorflow as tf
 
 cam_source = 'http://192.168.18.6:4747/video'
-labels = ['healthy', 'rotten']
-path = os.getcwd()
 cam = cv.VideoCapture(cam_source)
 
 model = models.load_model('model.h5')
@@ -18,12 +16,12 @@ while True:
     if not ret:
         print("Can't receive stream...")
         break
-    image = cv.resize(frame, (64, 64)) 
-    image = image[:, :, [2, 1, 0]] 
-    image = image.reshape(1, 64, 64, 3)
-    image = image.astype('float32')
-    image = image/255
-    prediction = model.predict(image)[0][[0]]
+    image = cv.resize(frame, (64, 64)) # rozdzielczosc
+    image = image[:, :, [2, 1, 0]] # na RGB
+    image = image.reshape(1, 64, 64, 3) # dodatkowy wymiar
+    image = image.astype('float32') # typ na float32
+    image = image/255 # skalowanie
+    prediction = model.predict(image)[0][0]
     prediction_class = model.predict(image).argmax(axis=-1)
     if prediction < 0.4:
         frame = cv.cvtColor(frame,cv.COLOR_BGR2GRAY)
