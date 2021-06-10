@@ -1,10 +1,11 @@
 import numpy as np
 import cv2 as cv
 from keras import models
+import os
 
 model = models.load_model('model_bg.h5')
 #cam
-cam_source = 'http://192.168.18.6:4747/video'
+cam_source = 'test.mp4' #'http://192.168.18.6:4747/video'
 cam = cv.VideoCapture(cam_source)
 
 #text cam
@@ -13,6 +14,10 @@ org = (10,20)
 fontScale = 0.5
 color = (0,255,0) # BGR
 thickness = 1
+
+folders = []
+for x in os.listdir('data/train/'):
+    folders.append(x)
 
 if not cam.isOpened():
     print("Cannot open camera")
@@ -33,11 +38,13 @@ while True:
     pred = int(np.rint(pred))
     prediction_class = model.predict(image).argmax(axis=-1)
     if(int(prediction_class) == 0):
-        pred_label = "Healthy"
+        pred_label = folders[0]
     elif(int(prediction_class) == 1):
-        pred_label = "Rotten"
+        pred_label = folders[1]
+    elif(int(prediction_class) == 2):
+        pred_label = folders[2]
     else:
-        pred_label = "None"
+        pred_label = "Unknown"
     pred = "Prediction: "+str(pred)+"% "+pred_label
     if prediction > 0.05:
         print(pred,prediction, " ", prediction_class)
