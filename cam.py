@@ -2,7 +2,7 @@ import numpy as np
 import cv2 as cv
 from keras import models
 
-model = models.load_model('model4.h5')
+model = models.load_model('model_bg.h5')
 #cam
 cam_source = 'http://192.168.18.6:4747/video'
 cam = cv.VideoCapture(cam_source)
