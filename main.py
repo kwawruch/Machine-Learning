@@ -2,11 +2,6 @@ import matplotlib.pyplot as plt
 from keras.models import Sequential
 from keras.layers import Dense, Conv2D, MaxPool2D, Flatten, Dropout
 from keras.preprocessing.image import ImageDataGenerator
-from sklearn.metrics import classification_report
-import tensorflow as tf
-import cv2
-import os
-import numpy as np
 
 train_datagen = ImageDataGenerator(
     rescale=1/255,
@@ -21,11 +16,11 @@ test_datagen = ImageDataGenerator(
     rescale=1/255
 )
 img_size = 64
-batch_size = 30
+batch_size = 32
 
 
 train_generator = train_datagen.flow_from_directory(
-    'data/train',
+    'data/train/',
     target_size=(img_size, img_size),
     batch_size=batch_size,
     shuffle=True,
@@ -38,7 +33,7 @@ print(train_generator.labels)
 print(type(train_generator))
 
 test_generator = test_datagen.flow_from_directory(
-    'data/test',
+    'data/test/',
     target_size=(img_size, img_size),
     batch_size=batch_size,
     shuffle=True,
@@ -62,7 +57,7 @@ model.add(MaxPool2D(2, 2))
 model.add(Dropout(0.4))
 model.add(Flatten())
 model.add(Dense(128, activation="relu"))
-model.add(Dense(2, activation="softmax"))
+model.add(Dense(3, activation="softmax"))
 
 model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
@@ -82,8 +77,7 @@ print("results:",results)
 predict = model.predict(x[0].reshape(1,img_size,img_size,3))
 print("prediction:",predict)
 
-#model.save("model.h5")
-#tf.saved_model.save(model, "saved-model/1/")
+model.save("model_bg.h5")
 
 acc = history.history['accuracy']
 val_acc = history.history['val_accuracy']
