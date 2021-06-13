@@ -46,6 +46,7 @@ while True:
     image = image.astype('float32')
     image = image/255
     prediction = model.predict(image)[0][0]
+    p_t = str(model.predict(image))
     pred = prediction*100
     pred = int(np.rint(pred))
     prediction_class = model.predict(image).argmax(axis=-1)
@@ -58,8 +59,8 @@ while True:
     else:
         pred_label = "Unknown"
     pred_txt = "Prediction: "+str(pred)+"% "+pred_label
-    if prediction > 0.05:
-        print(pred_txt,prediction, " ", prediction_class)
+    #if prediction > 0.05:
+    print(pred_txt,prediction, " ", prediction_class," ",p_t)
     image = cv.putText(frame, pred_txt, org, font, fontScale, retColor(pred), thickness, cv.LINE_AA)
     cv.imshow('Cam', frame)
     if cv.waitKey(1) == ord('q'):
