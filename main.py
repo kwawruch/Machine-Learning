@@ -16,7 +16,7 @@ test_datagen = ImageDataGenerator(
     rescale=1/255
 )
 img_size = 64
-batch_size = 32
+batch_size = 64
 
 
 train_generator = train_datagen.flow_from_directory(
@@ -51,10 +51,10 @@ model.add(MaxPool2D(2, 2))
 model.add(Dropout(0.6))
 model.add(Conv2D(32, 3, activation="relu"))
 model.add(MaxPool2D(2, 2))
-model.add(Dropout(0.4))
+#model.add(Dropout(0.4))
 model.add(Conv2D(64, 3, activation="relu"))
 model.add(MaxPool2D(2, 2))
-model.add(Dropout(0.4))
+#model.add(Dropout(0.4))
 model.add(Flatten())
 model.add(Dense(128, activation="relu"))
 model.add(Dense(3, activation="softmax"))
@@ -65,7 +65,7 @@ model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accur
 history = model.fit(
     train_generator,
     steps_per_epoch=train_generator.samples // batch_size,
-    epochs=20,
+    epochs=50,
     validation_data=test_generator,
     validation_steps=test_generator.samples // batch_size
 )
@@ -77,7 +77,7 @@ print("results:",results)
 predict = model.predict(x[0].reshape(1,img_size,img_size,3))
 print("prediction:",predict)
 
-model.save("model_bg.h5")
+model.save("model_bg_200ep_110.h5")
 
 acc = history.history['accuracy']
 val_acc = history.history['val_accuracy']
